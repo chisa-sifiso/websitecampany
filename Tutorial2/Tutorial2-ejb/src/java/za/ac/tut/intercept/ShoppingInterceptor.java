@@ -6,6 +6,10 @@ import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
 import za.ac.tut.Item;
 
+/**
+ *
+ * @author samuk
+ */
 @Interceptor
 public class ShoppingInterceptor
 {

@@ -10,6 +10,10 @@ import javax.jms.MessageListener;
 import javax.jms.ObjectMessage;
 import za.ac.tut.Item;
 
+/**
+ *
+ * @author samuk
+ */
 @MessageDriven(activationConfig = {
     @ActivationConfigProperty(propertyName = "clientId", propertyValue = "Jms/recentBoughtItems"),
     @ActivationConfigProperty(propertyName = "destinationLookup", propertyValue = "Jms/recentBoughtItems"),

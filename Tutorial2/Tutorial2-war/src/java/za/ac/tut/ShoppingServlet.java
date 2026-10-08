@@ -22,6 +22,10 @@ import javax.servlet.http.HttpSession;
 import za.ac.tut.session.CustomerService;
 import za.ac.tut.session.ShoppingCartService;
 
+/**
+ *
+ * @author samuk
+ */
 @WebServlet(name = "ShoppingServlet", urlPatterns = {"/ShoppingServlet"})
 public class ShoppingServlet extends HttpServlet {
 @EJB

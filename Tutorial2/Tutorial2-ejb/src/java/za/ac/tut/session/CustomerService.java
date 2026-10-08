@@ -5,6 +5,10 @@ import javax.ejb.Local;
 import za.ac.tut.Customer;
 import za.ac.tut.Item;
 
+/**
+ *
+ * @author samuk
+ */
 @Local
 public interface CustomerService
 {

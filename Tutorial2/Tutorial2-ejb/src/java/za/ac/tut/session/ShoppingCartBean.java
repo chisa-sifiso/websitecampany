@@ -9,6 +9,10 @@ import za.ac.tut.Item;
 import za.ac.tut.intercept.ReplaceItemInterceptor;
 import za.ac.tut.intercept.ShoppingInterceptor;
 
+/**
+ *
+ * @author samuk
+ */
 @Stateful
 public class ShoppingCartBean implements ShoppingCartService
 {

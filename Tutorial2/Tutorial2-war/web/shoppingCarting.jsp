@@ -1,3 +1,8 @@
+<%-- 
+    Document   : shoppingCarting
+    Author     : samuk
+--%>
+
 <%@page import="java.util.List"%>
 <%@page import="za.ac.tut.Item"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>

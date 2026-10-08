@@ -8,6 +8,10 @@ import javax.persistence.Query;
 import za.ac.tut.Customer;
 import za.ac.tut.Item;
 
+/**
+ *
+ * @author samuk
+ */
 @Stateless
 public class CustomerBean implements CustomerService
 {
