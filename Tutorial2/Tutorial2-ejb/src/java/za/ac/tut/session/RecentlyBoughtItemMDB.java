@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/J2EE/EJB30/MessageDrivenBean.java to edit this template
- */
 package za.ac.tut.session;
 
 import java.util.logging.Level;
@@ -14,10 +10,6 @@ import javax.jms.MessageListener;
 import javax.jms.ObjectMessage;
 import za.ac.tut.Item;
 
-/**
- *
- * @author samuk
- */
 @MessageDriven(activationConfig = {
     @ActivationConfigProperty(propertyName = "clientId", propertyValue = "Jms/recentBoughtItems"),
     @ActivationConfigProperty(propertyName = "destinationLookup", propertyValue = "Jms/recentBoughtItems"),
@@ -26,7 +18,6 @@ import za.ac.tut.Item;
     @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Topic")
 })
 public class RecentlyBoughtItemMDB implements MessageListener {
-
     public RecentlyBoughtItemMDB() {
     }
 
@@ -44,5 +35,4 @@ public class RecentlyBoughtItemMDB implements MessageListener {
             }
         }
     }
-
 }

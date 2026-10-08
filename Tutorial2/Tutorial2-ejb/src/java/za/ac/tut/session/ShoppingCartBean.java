@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package za.ac.tut.session;
 
 import java.util.ArrayList;
@@ -13,10 +9,6 @@ import za.ac.tut.Item;
 import za.ac.tut.intercept.ReplaceItemInterceptor;
 import za.ac.tut.intercept.ShoppingInterceptor;
 
-/**
- *
- * @author samuk
- */
 @Stateful
 public class ShoppingCartBean implements ShoppingCartService
 {
@@ -45,7 +37,6 @@ public class ShoppingCartBean implements ShoppingCartService
     @Interceptors(ReplaceItemInterceptor.class)
     public void replaceItem(int id, Item item)
     {
-        //LOOK FOR THE ITEM AND REPLACE IT
         for (int i = 0; i < items.size(); i++)
         {
             if (id == items.get(i).getItemID())
@@ -54,5 +45,4 @@ public class ShoppingCartBean implements ShoppingCartService
             }
         }
     }
-
 }
