@@ -10,5 +10,5 @@ public interface CustomerService {
     public void storeCustomer(Customer customer);
     public Customer validateLogon(String email, String password);
     public Item findItem(int id);
-    public List<Item> getAllItems(String itemType);
+    public List<Item> getAllItems(String items);
 }
