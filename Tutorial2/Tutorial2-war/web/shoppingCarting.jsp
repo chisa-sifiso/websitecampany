@@ -1,3 +1,8 @@
+<%--
+    Document   : shoppingCarting
+    Author     : samuk
+--%>
+
 <%@page import="java.util.List"%>
 <%@page import="za.ac.tut.Item"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -8,62 +13,40 @@
         <title>Shopping Cart</title>
     </head>
     <body>
-        <h1>ABC Wholesalers - Products</h1>
+        <h1>Products</h1>
         <%
             List<Item> items = (List<Item>) session.getAttribute("items");
-            if (items == null) {
-                response.sendRedirect("login.html");
-                return;
+            if (items != null)
+            {
+                for (Item item : items)
+                {
+        %>
+        <form action="ShoppingServlet" method="post">
+            <%= item.getName() %> R<%= item.getPrice() %>
+            <input type="hidden" name="itemID" value="<%= item.getItemID() %>" />
+            <input type="submit" value="Add to Cart" name="select" />
+        </form>
+        <%
+                }
             }
         %>
-        <table border="1">
-            <tr>
-                <th>Product</th>
-                <th>Type</th>
-                <th>Qty</th>
-                <th>Price</th>
-                <th></th>
-            </tr>
-            <% for (Item item : items) { %>
-            <tr>
-                <td><%= item.getName() %></td>
-                <td><%= item.getItemType() %></td>
-                <td><%= item.getQty() %></td>
-                <td>R<%= String.format("%.2f", item.getPrice()) %></td>
-                <td>
-                    <form action="ShoppingServlet" method="POST">
-                        <input type="hidden" name="itemID" value="<%= item.getItemID() %>">
-                        <input type="submit" value="Add to Cart">
-                    </form>
-                </td>
-            </tr>
-            <% } %>
-        </table>
 
-        <h2>Cart</h2>
+        <h1>Cart</h1>
         <%
             List<Item> cartItems = (List<Item>) session.getAttribute("cartItems");
-            if (cartItems != null && !cartItems.isEmpty()) {
+            if (cartItems != null)
+            {
+                for (Item item : cartItems)
+                {
         %>
-        <ul>
-            <% for (Item item : cartItems) { %>
-            <li><%= item.getName() %> - R<%= String.format("%.2f", item.getPrice()) %></li>
-            <% } %>
-        </ul>
-        <% } else { %>
-        <p>Your cart is empty.</p>
-        <% } %>
-
-        <form action="ShoppingServlet" method="POST">
-            <input type="hidden" name="command" value="check out">
-            <input type="submit" value="Check Out">
-        </form>
-
+        <%= item.getName() %> R<%= item.getPrice() %></br>
         <%
-            List<Item> boughtItems = (List<Item>) session.getAttribute("boughtItems");
-            if (boughtItems != null) {
+                }
+            }
         %>
-        <p><%= boughtItems.size() %> item(s) checked out and published to Jms/recentBoughtItems.</p>
-        <% } %>
+
+        <form action="ShoppingServlet" method="post">
+            <input type="submit" value="check out" name="select" />
+        </form>
     </body>
 </html>

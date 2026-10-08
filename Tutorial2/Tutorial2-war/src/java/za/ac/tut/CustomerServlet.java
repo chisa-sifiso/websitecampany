@@ -38,19 +38,18 @@ CustomerService service;
         String password = request.getParameter("password");
 
         Customer customer = service.validateLogon(email, password);
-
         if (customer != null)
         {
+            //VALID LOGONS - SEND THE LIST OF ITEMS TO THE SHOPPING CART PAGE
             List<Item> items = service.getAllItems("items");
-
             HttpSession session = request.getSession();
             session.setAttribute("customer", customer);
             session.setAttribute("items", items);
-
             response.sendRedirect("shoppingCarting.jsp");
         }
         else
         {
+            //INVALID LOGONS - GO BACK TO LOGIN
             response.sendRedirect("login.html");
         }
     }

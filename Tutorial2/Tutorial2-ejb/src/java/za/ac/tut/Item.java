@@ -1,4 +1,7 @@
-
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package za.ac.tut;
 
 import java.io.Serializable;
@@ -7,10 +10,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+/**
+ *
+ * @author samuk
+ */
 @Entity
 @Table(name = "tblItem")
-public class Item implements Serializable {
-    
+public class Item implements Serializable
+{
     @Id
     @GeneratedValue
     private int itemID;
@@ -58,6 +65,5 @@ public class Item implements Serializable {
     public void setPrice(double price) {
         this.price = price;
     }
-    
-    
+
 }

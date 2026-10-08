@@ -1,4 +1,7 @@
-
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package za.ac.tut;
 
 import java.io.Serializable;
@@ -7,9 +10,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+/**
+ *
+ * @author samuk
+ */
 @Entity
 @Table(name = "tblCustomer")
-public class Customer implements Serializable{
+public class Customer implements Serializable
+{
     @Id
     @GeneratedValue
     private int id;
@@ -48,6 +56,5 @@ public class Customer implements Serializable{
     public void setUserType(String userType) {
         this.userType = userType;
     }
-    
-    
+
 }

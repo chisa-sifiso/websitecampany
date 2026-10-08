@@ -52,51 +52,46 @@ Topic topic;
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
-        String command = request.getParameter("command");
+        String decide = request.getParameter("select");
 
-        if ("check out".equalsIgnoreCase(command))
+        if (decide.equals("check out"))
         {
-            List<Item> boughtItems = service.checkout();
-
-            for (Item item : boughtItems)
+            //PUBLISH EACH ITEM FROM THE SHOPPING CART
+            List<Item> items = service.checkout();
+            for (Item item : items)
             {
                 publishRecentItem(item);
             }
-            session.setAttribute("boughtItems", boughtItems);
+            session.setAttribute("boughtItems", items);
         }
         else
         {
+            //ADD AN ITEM TO THE SHOPPING CART
             int itemID = Integer.parseInt(request.getParameter("itemID"));
-            Item item = customerService.findItem(itemID);
-
-            if (item != null)
-            {
-                service.addToCart(item);
-            }
+            Item objItem = customerService.findItem(itemID);
+            service.addToCart(objItem);
             session.setAttribute("cartItems", service.checkout());
         }
-
         response.sendRedirect("shoppingCarting.jsp");
     }
 
     public void publishRecentItem(Item item)
     {
-        try {
-            Connection connection = factory.createConnection();
-            //Session
-            Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-            MessageProducer publish = session.createProducer(topic);
-            ObjectMessage objMsg = session.createObjectMessage(item);
-            publish.send(objMsg);
-            session.close();
-            connection.close();
-        }
-        catch (JMSException ex)
-        {
-            Logger.getLogger(ShoppingServlet.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    try {
+        Connection connection = factory.createConnection();
+        //Session
+        Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+        MessageProducer publish = session.createProducer(topic);
+        ObjectMessage objMsg = session.createObjectMessage(item);
+        publish.send(objMsg);
+        session.close();
+        connection.close();
+       }
+     catch (JMSException ex)
+     {
+        Logger.getLogger(ShoppingServlet.class.getName()).log(Level.SEVERE, null, ex);
+      }
     }
-
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
