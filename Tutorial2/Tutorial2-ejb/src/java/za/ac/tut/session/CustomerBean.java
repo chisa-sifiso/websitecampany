@@ -21,7 +21,7 @@ public class CustomerBean implements CustomerService {
     @Override
     public Customer validateLogon(String email, String password) {
 
-        String sql = "SELECT customer from Customer customer WHERE customer.email = :email AND customer.password = :password";
+        String sql = "SELECT c from Customer c WHERE c.email = :email AND c.password = :password";
         Query query = entity.createQuery(sql);
         query.setParameter("email", email);
         query.setParameter("password", password);
@@ -43,7 +43,7 @@ public class CustomerBean implements CustomerService {
 
     @Override
     public List<Item> getAllItems(String items) {
-        String sql = "SELECT item from Item item";
+        String sql = "SELECT i from Item i";
         Query query = entity.createQuery(sql);
         List<Item> item = (List<Item>) query.getResultList();
 
