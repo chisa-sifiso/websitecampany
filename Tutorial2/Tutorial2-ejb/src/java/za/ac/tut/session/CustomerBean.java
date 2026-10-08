@@ -5,6 +5,8 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import za.ac.tut.Customer;
+import za.ac.tut.Item;
 
 @Stateless
 public class CustomerBean implements CustomerService {

@@ -1,5 +1,5 @@
 <%@page import="java.util.List"%>
-<%@page import="za.ac.tut.session.Item"%>
+<%@page import="za.ac.tut.Item"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>

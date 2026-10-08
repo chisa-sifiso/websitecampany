@@ -13,9 +13,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import za.ac.tut.session.Customer;
 import za.ac.tut.session.CustomerService;
-import za.ac.tut.session.Item;
 
 /**
  *
@@ -23,9 +21,54 @@ import za.ac.tut.session.Item;
  */
 @WebServlet(name = "CustomerServlet", urlPatterns = {"/CustomerServlet"})
 public class CustomerServlet extends HttpServlet {
+@EJB
+CustomerService service;
+    /**
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
+     * methods.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
 
-    @EJB
-    private CustomerService customerService;
+        Customer customer = service.validateLogon(email, password);
+
+        if (customer != null)
+        {
+            List<Item> items = service.getAllItems("items");
+
+            HttpSession session = request.getSession();
+            session.setAttribute("customer", customer);
+            session.setAttribute("items", items);
+
+            response.sendRedirect("shoppingCarting.jsp");
+        }
+        else
+        {
+            response.sendRedirect("login.html");
+        }
+    }
+
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+    /**
+     * Handles the HTTP <code>GET</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        processRequest(request, response);
+    }
 
     /**
      * Handles the HTTP <code>POST</code> method.
@@ -38,23 +81,7 @@ public class CustomerServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        String email = request.getParameter("email");
-        String password = request.getParameter("password");
-
-        Customer customer = customerService.validateLogon(email, password);
-
-        if (customer != null) {
-            List<Item> items = customerService.getAllItems("items");
-
-            HttpSession session = request.getSession();
-            session.setAttribute("customer", customer);
-            session.setAttribute("items", items);
-
-            response.sendRedirect("shoppingCarting.jsp");
-        } else {
-            response.sendRedirect("login.html");
-        }
+        processRequest(request, response);
     }
 
     /**
@@ -64,7 +91,7 @@ public class CustomerServlet extends HttpServlet {
      */
     @Override
     public String getServletInfo() {
-        return "Validates customer logons";
-    }
+        return "Short description";
+    }// </editor-fold>
 
 }

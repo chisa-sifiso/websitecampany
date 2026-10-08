@@ -6,13 +6,17 @@ package za.ac.tut;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
+import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
-import javax.jms.JMSContext;
+import javax.jms.JMSException;
+import javax.jms.MessageProducer;
+import javax.jms.ObjectMessage;
+import javax.jms.Session;
 import javax.jms.Topic;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -20,7 +24,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import za.ac.tut.session.CustomerService;
-import za.ac.tut.session.Item;
 import za.ac.tut.session.ShoppingCartService;
 
 /**
@@ -29,15 +32,85 @@ import za.ac.tut.session.ShoppingCartService;
  */
 @WebServlet(name = "ShoppingServlet", urlPatterns = {"/ShoppingServlet"})
 public class ShoppingServlet extends HttpServlet {
+@EJB
+ShoppingCartService service;
+@EJB
+CustomerService customerService;
+@Resource(lookup="Jms/recentBoughtItemsFactory")
+ConnectionFactory factory;
+@Resource(lookup="Jms/recentBoughtItems")
+Topic topic;
+    /**
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
+     * methods.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        String command = request.getParameter("command");
 
-    @EJB
-    private CustomerService customerService;
+        if ("check out".equalsIgnoreCase(command))
+        {
+            List<Item> boughtItems = service.checkout();
 
-    @Resource(lookup = "java:comp/DefaultJMSConnectionFactory")
-    private ConnectionFactory connectionFactory;
+            for (Item item : boughtItems)
+            {
+                publishRecentItem(item);
+            }
+            session.setAttribute("boughtItems", boughtItems);
+        }
+        else
+        {
+            int itemID = Integer.parseInt(request.getParameter("itemID"));
+            Item item = customerService.findItem(itemID);
 
-    @Resource(lookup = "Jms/recentBoughtItems")
-    private Topic topic;
+            if (item != null)
+            {
+                service.addToCart(item);
+            }
+            session.setAttribute("cartItems", service.checkout());
+        }
+
+        response.sendRedirect("shoppingCarting.jsp");
+    }
+
+    public void publishRecentItem(Item item)
+    {
+        try {
+            Connection connection = factory.createConnection();
+            //Session
+            Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+            MessageProducer publish = session.createProducer(topic);
+            ObjectMessage objMsg = session.createObjectMessage(item);
+            publish.send(objMsg);
+            session.close();
+            connection.close();
+        }
+        catch (JMSException ex)
+        {
+            Logger.getLogger(ShoppingServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+    /**
+     * Handles the HTTP <code>GET</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        processRequest(request, response);
+    }
 
     /**
      * Handles the HTTP <code>POST</code> method.
@@ -50,53 +123,7 @@ public class ShoppingServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        HttpSession session = request.getSession();
-        ShoppingCartService cart = getShoppingCart(session);
-
-        String command = request.getParameter("command");
-
-        if ("check out".equalsIgnoreCase(command)) {
-            List<Item> boughtItems = cart.checkout();
-
-            for (Item item : boughtItems) {
-                publishRecentItem(item);
-            }
-
-            session.setAttribute("boughtItems", boughtItems);
-        } else {
-            int itemID = Integer.parseInt(request.getParameter("itemID"));
-            Item item = customerService.findItem(itemID);
-
-            if (item != null) {
-                cart.addToCart(item);
-            }
-            session.setAttribute("cartItems", cart.checkout());
-        }
-
-        response.sendRedirect("shoppingCarting.jsp");
-    }
-
-    public void publishRecentItem(Item item) {
-        try (JMSContext context = connectionFactory.createContext()) {
-            context.createProducer().send(topic, item);
-        }
-    }
-
-    // A stateful bean must not be shared between users, so each HTTP session gets its own cart
-    private ShoppingCartService getShoppingCart(HttpSession session) throws ServletException {
-        ShoppingCartService cart = (ShoppingCartService) session.getAttribute("cart");
-
-        if (cart == null) {
-            try {
-                InitialContext ctx = new InitialContext();
-                cart = (ShoppingCartService) ctx.lookup("java:app/Tutorial2-ejb/ShoppingCartBean!za.ac.tut.session.ShoppingCartService");
-                session.setAttribute("cart", cart);
-            } catch (NamingException e) {
-                throw new ServletException(e);
-            }
-        }
-        return cart;
+        processRequest(request, response);
     }
 
     /**
@@ -106,7 +133,7 @@ public class ShoppingServlet extends HttpServlet {
      */
     @Override
     public String getServletInfo() {
-        return "Adds items to the shopping cart and checks out";
-    }
+        return "Short description";
+    }// </editor-fold>
 
 }

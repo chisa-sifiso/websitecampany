@@ -1,5 +1,5 @@
 
-package za.ac.tut.session;
+package za.ac.tut;
 
 import java.io.Serializable;
 import javax.persistence.Entity;

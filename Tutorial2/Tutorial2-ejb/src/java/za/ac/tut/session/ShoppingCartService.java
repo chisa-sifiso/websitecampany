@@ -3,6 +3,7 @@ package za.ac.tut.session;
 
 import java.util.List;
 import javax.ejb.Local;
+import za.ac.tut.Item;
 
 @Local
 public interface ShoppingCartService {
