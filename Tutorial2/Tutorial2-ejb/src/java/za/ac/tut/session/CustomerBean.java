@@ -21,11 +21,12 @@ public class CustomerBean implements CustomerService {
     @Override
     public Customer validateLogon(String email, String password) {
 
-        String sql = "SELECT Customer from Customer customer WHERE customer.email LIKE :email AND customer.password LIKE :password";
+        String sql = "SELECT customer from Customer customer WHERE customer.email = :email AND customer.password = :password";
         Query query = entity.createQuery(sql);
         query.setParameter("email", email);
         query.setParameter("password", password);
-        Customer customer = (Customer) query.getResultList();
+        List<Customer> customers = (List<Customer>) query.getResultList();
+        Customer customer = customers.isEmpty() ? null : customers.get(0);
         return customer;
     }
 
@@ -38,7 +39,7 @@ public class CustomerBean implements CustomerService {
 
     @Override
     public List<Item> getAllItems(String items) {
-        String sql = "SELECT Item from Item item";
+        String sql = "SELECT item from Item item";
         Query query = entity.createQuery(sql);
         List<Item> item = (List<Item>) query.getResultList();
 
